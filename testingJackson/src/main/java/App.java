@@ -2,15 +2,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * todo: PROGRAM DESCRIPTION
@@ -26,8 +22,11 @@ public class App {
         System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Serializing and Deserializing a simple XMl File -=-=-=-=-=-=-=-=-=-");
         serializeSimple();
         deserializeSimple();
-        System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Deserializing a nested XML File -=-=-=-=-=-=-=-=-=-");
+        System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Serializing and Deserializing a nested XML File -=-=-=-=-=-=-=-=-=-");
+        serializeNested();
+        deserializeNested();
         System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Deserializing an array expressed as XML -=-=-=-=-=-=-=-=-=-");
+        System.out.println("Pulling first state from xml file...");
         deserializeState();
 
     }
@@ -56,7 +55,7 @@ public class App {
             // handle exception
             System.out.println(e);
         }
-    }
+    }//end of serializedSimple
 
     //simple XML file
     public static void deserializeSimple () {
@@ -65,7 +64,7 @@ public class App {
             XmlMapper xmlMapper = new XmlMapper();
 
             //read file and put contents into the string
-            String readContent = new String(Files.readAllBytes(Paths.get("password.xml")));
+            String readContent = new String(Files.readAllBytes(Paths.get("testingJackson/password.xml")));
 
             //creating instance of password object
             Credentials deserialized = xmlMapper.readValue(readContent, Credentials.class);
@@ -79,8 +78,34 @@ public class App {
         } catch (IOException e) {
             System.out.println("Error in deserializeFromXML: " + e);
         }
-    }
+    }//end of deserializeSimple
 
+    //nested xml
+    public static void serializeNested(){
+        try{
+            System.out.println("In serializeNested...");
+            XmlMapper xmlMapper = new XmlMapper();
+
+            //serialize our object into a new String
+            String xmlString = xmlMapper.writeValueAsString(new Nested("credit", "credit_url",
+                    new Nested.Image("url", "title", "link"), "suggested_pickup", "suggested_pickup_period"));
+
+            //write output to the console
+            System.out.println("Nested XML has been successfully been serialized!");
+            System.out.println("The contents of the nested xml file are as follows:");
+            System.out.println(xmlString);
+
+            //write to xml string to a new file
+            File xmlNestedOutput = new File("simpleSerialized.xml");
+            FileWriter fileWriter = new FileWriter(xmlNestedOutput);
+            fileWriter.write(xmlString);
+            fileWriter.close();
+        }catch(Exception e){
+            System.out.println("Error in serializeNested: " + e);
+        }//end of catch
+    }//end of serializeNested
+
+    //nested xml
     public static void deserializeNested(){
         try{
             System.out.println("\nIn deserializeNested...");
@@ -98,77 +123,30 @@ public class App {
 
             //create url that contains the xml file
             URL url = new URL("https://civilserviceusa.github.io/us-states/data/states.xml");
-            //testing from the xml file I created
-            //String url = new String(Files.readAllBytes(Paths.get("states.xml")));
-
-
-
-            /*
-            String test = "";
-            InputStream in = url.openStream();
-            Scanner scan = new Scanner(in);
-            scan.nextLine().trim();
-            while(scan.hasNext()){
-                if(scan.next().equals(null)){
-                    continue;
-                }
-                test = test + scan.next().trim();
-                if (scan.next().equals("</states>")) {
-                    break;
-                }
-            }
-
-            */
-
-            /*
-            InputStream input = new URL("https://civilserviceusa.github.io/us-states/data/states.xml").openStream();
-            XMLInputFactory xmlInFact = XMLInputFactory.newInstance();
-            XMLStreamReader reader = xmlInFact.createXMLStreamReader(input);
-            while(reader.hasNext()){
-                System.out.println(reader.getText());
-                reader.next();
-            }
-            */
-
-
-
-
 
             //testing reading from url with a scanner
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             in.readLine();
             String test = "";
+            int count = 0;
             String result= "";
             while ((test = in.readLine().trim()) != null){
-                //test = test + in.readLine();
-                System.out.println(test);
-                //result = result + test;
-                //if (in.readLine().equals("</state>")){
-                    //break;
-                //}
+                result = result + test;
+                if (test.contains("</state>")){
+                    count = count +1;
+                    if(count >= 2){
+                        result = result +"</states>";
+                        break;
+                    }
+                }
             }
-            /**/
 
-
-
-             /*
-            String test = "";
-            Scanner sc = new Scanner(url);
-            while(sc.hasNextLine()){
-                test = test+sc.next();
-            }
-            //System.out.println(test);
-            */
-
-
-            //List<States> states = xmlMapper.readValue(test, new TypeReference<List<States>>() {});
-            //System.out.println(toString(states));
-
-            System.out.println("End of try");
+            List<States> states = xmlMapper.readValue(result, new TypeReference<List<States>>() {});
+            System.out.println(toString(states));
         } catch (Exception e){
             System.out.println("Error in deserializeState: " + e);
         }
-    }
+    }//end of deserializedState
 
     //toString to help print the array expressed as XML example
     public static String toString(Object obj) {
