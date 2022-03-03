@@ -19,15 +19,26 @@ import java.util.List;
 public class App {
     public static void main(String[] args) {
 
-        System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Serializing and Deserializing a simple XMl File -=-=-=-=-=-=-=-=-=-");
-        serializeSimple();
+        //System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Serializing and Deserializing a simple XMl File -=-=-=-=-=-=-=-=-=-");
+        //serializeSimple();
         deserializeSimple();
-        System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Serializing and Deserializing a nested XML File -=-=-=-=-=-=-=-=-=-");
-        serializeNested();
-        deserializeNested();
-        System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Deserializing an array expressed as XML -=-=-=-=-=-=-=-=-=-");
-        System.out.println("Pulling first state from xml file...");
-        deserializeState();
+        //System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Serializing and Deserializing a nested XML File -=-=-=-=-=-=-=-=-=-");
+        //serializeNested();
+        //deserializeNested();
+        //System.out.println("\n-=-=-=-=-=-=-=-=-=- Example of Deserializing an array expressed as XML -=-=-=-=-=-=-=-=-=-");
+        //deserializeState();
+
+        //testing creating a nested object
+        Nested.Image image = new Nested.Image("url", "title", "link");
+        Nested nested = new Nested("credit", "creditUrl", image, "suggPick", "suggPickperiod");
+
+        //printing values
+        System.out.println("values");
+        System.out.println("\tCredit Url: " + nested.getCreditUrl());
+        System.out.println("\tImage:");
+        System.out.println("\t\turl: " + nested.getImage());
+
+
 
     }
 
@@ -96,7 +107,7 @@ public class App {
             System.out.println(xmlString);
 
             //write to xml string to a new file
-            File xmlNestedOutput = new File("simpleSerialized.xml");
+            File xmlNestedOutput = new File("nestedSerialized.xml");
             FileWriter fileWriter = new FileWriter(xmlNestedOutput);
             fileWriter.write(xmlString);
             fileWriter.close();
@@ -109,6 +120,38 @@ public class App {
     public static void deserializeNested(){
         try{
             System.out.println("\nIn deserializeNested...");
+            XmlMapper xmlMapper = new XmlMapper();
+
+            //read the from the url the items that we need to deserialize
+            URL url = new URL("https://w1.weather.gov/xml/current_obs/KSTJ.xml");
+
+            //reading with BufferedReader
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String currentLine = "";
+            String lineConcat = "";
+            while((currentLine = in.readLine().trim()) != null){
+                if(currentLine.contains("<credit>")){
+                    lineConcat = lineConcat + currentLine;
+                    for(int i = 0; i <= 7; i++){
+                        lineConcat = lineConcat + in.readLine().trim();
+                    }
+                    break;
+                }
+            }//end of while loop
+
+            //System.out.println(lineConcat);
+            //creating instance of Nested Object
+            Nested deserialized = xmlMapper.readValue(lineConcat, Nested.class);
+
+            //print details
+            System.out.println("Deserialized data...");
+            System.out.println("\tCredit: " + deserialized.getCredit());
+            System.out.println("\tCredit Url: " + deserialized.getCreditUrl());
+            System.out.println("\tImage: " + deserialized.getImage());
+            System.out.println("\tSuggested Pickup: " + deserialized.getSuggestedPickup());
+            System.out.println("\tSuggested Pickup Period: " + deserialized.getSuggestedPickupPeriod());
+
+
 
         }catch(Exception e){
             System.out.println("Error in deserializeNested: " + e);
@@ -124,7 +167,8 @@ public class App {
             //create url that contains the xml file
             URL url = new URL("https://civilserviceusa.github.io/us-states/data/states.xml");
 
-            //testing reading from url with a scanner
+            //testing reading from url with a BufferedReader
+            System.out.println("Pulling first state from xml file...");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             in.readLine();
             String test = "";
