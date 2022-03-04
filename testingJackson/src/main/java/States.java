@@ -1,7 +1,14 @@
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * States is the POJO used for the array expressed as XML example.
+ *
+ * @author: Group 7
+ * @since: February 2022
+ *
+ */
+
 public class States {
-    //@JsonIgnore
     private String state;
     private String slug;
     private String code;
@@ -21,32 +28,6 @@ public class States {
     private String skyline_background_url;
     private String twitter_url;
     private String facebook_url;
-
-
-    //constructor
-
-    /*
-    public States(String state, String slug, String code, String nickname, String website, String admission_date, String admission_number, String capital_city, String population, String population_rank, String constitution_url, String state_flag_url, String state_seal_url, String map_image_url, String landscape_background_url, String skyline_background_url, String twitter_url, String facebook_url) {
-        this.state = state;
-        this.slug = slug;
-        this.code = code;
-        this.nickname = nickname;
-        this.website = website;
-        this.admission_date = admission_date;
-        this.admission_number = admission_number;
-        this.capital_city = capital_city;
-        this.population = population;
-        this.population_rank = population_rank;
-        this.constitution_url = constitution_url;
-        this.state_flag_url = state_flag_url;
-        this.state_seal_url = state_seal_url;
-        this.map_image_url = map_image_url;
-        this.landscape_background_url = landscape_background_url;
-        this.skyline_background_url = skyline_background_url;
-        this.twitter_url = twitter_url;
-        this.facebook_url = facebook_url;
-    }
-     */
 
     //getters
 

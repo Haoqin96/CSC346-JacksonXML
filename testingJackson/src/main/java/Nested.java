@@ -1,3 +1,13 @@
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+/**
+ * Nested is the POJO used for the nested XML example.
+ *
+ * @author: Group 7
+ * @since: February 2022
+ *
+ */
+
 public class Nested {
     private String credit;
     private String creditUrl;
@@ -5,7 +15,9 @@ public class Nested {
     private String suggestedPickup;
     private String suggestedPickupPeriod;
 
-    //constructor
+    //constructors
+    public Nested(){}
+
     public Nested(String credit, String creditUrl, Image image, String suggestedPickup, String suggestedPickupPeriod){
         setCredit(credit);
         setCreditUrl(creditUrl);
@@ -15,8 +27,6 @@ public class Nested {
     }
 
     //getters and setters
-
-
     public String getCredit() {
         return credit;
     }

@@ -1,3 +1,11 @@
+/**
+ * Credentials is the POJO used for the simple XMl file example.
+ *
+ * @author: Group 7
+ * @since: February 2022
+ *
+ */
+
 public class Credentials {
     private String host;
     private String port;
@@ -11,16 +19,6 @@ public class Credentials {
         this.password = password;
     }
     public Credentials(){}
-
-    //constructor
-    /*
-    public Credentials(String host, String port, String user, String password) {
-        this.host = host;
-        this.port = port;
-        this.user = user;
-        this.password = password;
-    }
-    */
 
     //getters
 
