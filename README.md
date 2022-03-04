@@ -23,10 +23,9 @@ To set up a Jackson project, you should first create a new Maven project. After 
   </dependency>
 ```
 
+## Serializing Simple XML File
 
-## Deserializing Simple XML File
-
-We'll start with reading and deserializing a simple xml file. For example, the following:
+We'll start with serializing a simple XML file. The file could look like: 
 
 ```
 <?xml version="1.0"?>
@@ -38,7 +37,38 @@ We'll start with reading and deserializing a simple xml file. For example, the f
 </credentials>
 ```
 
-partnered with: 
+By using the following method: 
+```
+    public static void serializeSimple() {
+        try {
+            System.out.println("\nIn serializeSimple...");
+            XmlMapper xmlMapper = new XmlMapper();
+
+            String xmlString = xmlMapper.writeValueAsString(new Credentials("missouriwestern.edu", "3306", "student", "1234ABCD"));
+
+            System.out.println("The XML File has been sucessfully serialized!");
+            System.out.println("The contents of the new XML file are as follows:");
+            System.out.println(xmlString);
+
+            File xmlOutput = new File("simpleSerialized.xml");
+            FileWriter fileWriter = new FileWriter(xmlOutput);
+            fileWriter.write(xmlString);
+            fileWriter.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+```
+
+It should output: 
+
+```
+//output
+```
+
+## Deserializing Simple XML File
+
+Now, we'll deserialize the same file using the following method: 
 
 ```
     public static void deserializeSimple () {
@@ -61,7 +91,7 @@ partnered with:
     }
 ```
 
-will output: 
+It will output: 
 ```
 In deserializeSimple
 Deserialized data...
@@ -74,6 +104,40 @@ values
 	Image:
 		url: org.example.Nested$Image@ba8d91c
 ```
+
+## Serializing Nested XML File
+
+The following code will serialize a nested XML file: 
+
+```
+    public static void serializeNested(){
+        try{
+            System.out.println("In serializeNested...");
+            XmlMapper xmlMapper = new XmlMapper();
+
+            String xmlString = xmlMapper.writeValueAsString(new Nested("credit", "credit_url",
+                    new Nested.Image("url", "title", "link"), "suggested_pickup", "suggested_pickup_period"));
+
+            System.out.println("Nested XML has been successfully been serialized!");
+            System.out.println("The contents of the nested xml file are as follows:");
+            System.out.println(xmlString);
+
+            File xmlNestedOutput = new File("nestedSerialized.xml");
+            FileWriter fileWriter = new FileWriter(xmlNestedOutput);
+            fileWriter.write(xmlString);
+            fileWriter.close();
+        }catch(Exception e){
+            System.out.println("Error in serializeNested: " + e);
+        }
+    }
+```
+
+This will output: 
+
+```
+//output here
+```
+
 ## Deserializing Nested XML File
 
 Next, we will read from the [this url](https://w1.weather.gov/xml/current_obs/KSTJ.xml), and will deserialize the nested XML file. To do this we will add the following method: 
@@ -89,33 +153,69 @@ Next, we will read from the [this url](https://w1.weather.gov/xml/current_obs/KS
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String currentLine = "";
             String lineConcat = "";
-            while((currentLine = in.readLine().trim()) != null){
-                if(currentLine.contains("<credit>")){
-                    lineConcat = lineConcat + currentLine;
-                    for(int i = 0; i <= 7; i++){
-                        lineConcat = lineConcat + in.readLine().trim();
+
+            while((currentLine = in.readLine()) != null){
+                if(currentLine.contains("<image>")){
+                    for(int i = 0; i < 5; i++){
+                        lineConcat = lineConcat + currentLine.trim();
+                        currentLine = in.readLine();
                     }
                     break;
                 }
             }
 
-            Nested deserialized = xmlMapper.readValue(lineConcat, Nested.class);
+            Nested.Image image = xmlMapper.readValue(lineConcat, Nested.Image.class);
+
+            BufferedReader in2 = new BufferedReader(new InputStreamReader(url.openStream()));
+            currentLine = "";
+            lineConcat = "";
+
+            Nested nested = new Nested();
+
+            while((currentLine = in2.readLine()) != null){
+                if(currentLine.contains("<credit>")){
+                    currentLine = currentLine.replaceAll("<credit>", "");
+                    currentLine = currentLine.replaceAll("</credit>", "");
+                    nested.setCredit(currentLine.trim());
+                    currentLine = in2.readLine();
+                    currentLine = currentLine.replaceAll("<credit_URL>", "");
+                    currentLine = currentLine.replaceAll("</credit_URL>", "");
+                    nested.setCreditUrl(currentLine.trim());
+                    for(int i = 0; i < 5; i++){in2.readLine();}
+                    currentLine = in2.readLine();
+                    currentLine = currentLine.replaceAll("<suggested_pickup>", "");
+                    currentLine = currentLine.replaceAll("</suggested_pickup>", "");
+                    nested.setSuggestedPickup(currentLine.trim());
+                    currentLine = in2.readLine();
+                    currentLine = currentLine.replaceAll("<suggested_pickup_period>", "");
+                    currentLine = currentLine.replaceAll("</suggested_pickup_period>", "");
+                    nested.setSuggestedPickupPeriod(currentLine.trim());
+                    break;
+                }
+            }
+            nested.setImage(image);
 
             System.out.println("Deserialized data...");
-            System.out.println("\tCredit: " + deserialized.getCredit());
-            System.out.println("\tCredit Url: " + deserialized.getCreditUrl());
-            System.out.println("\tImage: " + deserialized.getImage());
-            System.out.println("\tSuggested Pickup: " + deserialized.getSuggestedPickup());
-            System.out.println("\tSuggested Pickup Period: " + deserialized.getSuggestedPickupPeriod());
-
-
-
+            System.out.println("\tCredit: " + nested.getCredit());
+            System.out.println("\tCredit Url: " + nested.getCreditUrl());
+            System.out.println("\tImage Information:");
+            System.out.println("\t\tImage Url: " + image.getUrl());
+            System.out.println("\t\tImage Title: " + image.getTitle());
+            System.out.println("\t\tImage Link: " + image.getLink());
+            System.out.println("\tSuggested Pickup: " + nested.getSuggestedPickup());
+            System.out.println("\tSuggested Pickup Period: " + nested.getSuggestedPickupPeriod());
         }catch(Exception e){
             System.out.println("Error in deserializeNested: " + e);
         }
     }
 ```
 
+will output: 
+
+```
+//output here
+```
+ 
 ## Deserializing Array in XML
 
 Lastly, we will deserialize an array expressed in XML. With an array of all 50 states, formatted in the following way: 
