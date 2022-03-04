@@ -73,7 +73,10 @@ By using the following method:
 It should output: 
 
 ```
-//output
+In serializeSimple...
+The XML File has been sucessfully serialized!
+The contents of the new XML file are as follows:
+<Credentials><host>missouriwestern.edu</host><port>3306</port><user>student</user><password>1234ABCD</password></Credentials>```
 ```
 
 ## Deserializing Simple XML File
@@ -109,10 +112,6 @@ Deserialized data...
 	Port: 33006
 	User: csc
 	Password: ********
-values
-	Credit Url: creditUrl
-	Image:
-		url: org.example.Nested$Image@ba8d91c
 ```
 
 ## Serializing Nested XML File
@@ -145,7 +144,11 @@ The following code will serialize a nested XML file:
 This will output: 
 
 ```
-//output here
+In serializeNested...
+Nested XML has been successfully been serialized!
+The contents of the nested xml file are as follows:
+<Nested><credit>credit</credit><creditUrl>credit_url</creditUrl><image><url>url</url><title>title</title><link>link</link></image><suggestedPickup>suggested_pickup</suggestedPickup><suggestedPickupPeriod>suggested_pickup_period</suggestedPickupPeriod></Nested>
+
 ```
 
 ## Deserializing Nested XML File
@@ -223,7 +226,16 @@ Next, we will read from the [this url](https://w1.weather.gov/xml/current_obs/KS
 will output: 
 
 ```
-//output here
+In deserializeNested...
+Deserialized data...
+	Credit: NOAA's National Weather Service
+	Credit Url: https://weather.gov/
+	Image Information:
+		Image Url: https://weather.gov/images/xml_logo.gif
+		Image Title: NOAA's National Weather Service
+		Image Link: https://www.weather.gov
+	Suggested Pickup: 15 minutes after the hour
+	Suggested Pickup Period: 60
 ```
  
 ## Deserializing Array in XML
@@ -317,10 +329,6 @@ Pulling first state from xml file...
   "twitter_url" : "https://twitter.com/alabamagov",
   "facebook_url" : "https://www.facebook.com/alabamagov"
 } ]
-values
-	Credit Url: creditUrl
-	Image:
-		url: org.example.Nested$Image@560348e6
 
 ```
 
