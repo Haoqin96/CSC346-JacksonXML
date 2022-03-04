@@ -19,8 +19,18 @@ To set up a Jackson project, you should first create a new Maven project. After 
   <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-xml</artifactId>
-    <version>2.9.0</version>
+    <version>2.13.1</version>
   </dependency>
+```
+
+You will also need to import the following Jackson packages to run our methods: 
+
+```
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 ```
 
 ## Serializing Simple XML File
