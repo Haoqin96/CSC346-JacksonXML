@@ -1,0 +1,23 @@
+<states>
+    <state>
+        <state>Alabama</state>
+        <slug>alabama</slug>
+        <code>AL</code>
+        <nickname>Yellowhammer State</nickname>
+        <website>http://www.alabama.gov</website>
+        <admission_date>1819-12-14</admission_date>
+        <admission_number>22</admission_number>
+        <capital_city>Montgomery</capital_city>
+        <capital_url>http://www.montgomeryal.gov</capital_url>
+        <population>4833722</population>
+        <population_rank>23</population_rank>
+        <constitution_url>http://alisondb.legislature.state.al.us/alison/default.aspx</constitution_url>
+        <state_flag_url>https://cdn.civil.services/us-states/flags/alabama-large.png</state_flag_url>
+        <state_seal_url>https://cdn.civil.services/us-states/seals/alabama-large.png</state_seal_url>
+        <map_image_url>https://cdn.civil.services/us-states/maps/alabama-large.png</map_image_url>
+        <landscape_background_url>https://cdn.civil.services/us-states/backgrounds/1280x720/landscape/alabama.jpg</landscape_background_url>
+        <skyline_background_url>https://cdn.civil.services/us-states/backgrounds/1280x720/skyline/alabama.jpg</skyline_background_url>
+        <twitter_url>https://twitter.com/alabamagov</twitter_url>
+        <facebook_url>https://www.facebook.com/alabamagov</facebook_url>
+    </state>
+</states>
