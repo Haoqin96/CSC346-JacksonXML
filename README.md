@@ -23,7 +23,7 @@ To set up a Jackson project, you should first create a new Maven project. After 
   </dependency>
 ```
 
-You will also need to import the following Jackson packages in your App.java file to run our methods: 
+You will also need to import the following Jackson packages in your `App.java` file to run our methods: 
 
 ```
 import com.fasterxml.jackson.core.type.TypeReference;
